@@ -9,8 +9,11 @@ Pod::Spec.new do |s|
   s.source   = { :git => 'https://github.com/almassapargali/LocationPicker.git', :tag => s.version.to_s }
   s.source_files = 'LocationPicker'
   s.resource = 'LocationPicker/Images.xcassets'
+s.resource_bundles = {
+     'BLAMCurrencyPicker' => ['LocationPicker/**/*.{storyboard,xib,xcdatamodeld}']
+  }
   s.platform = :ios
   s.swift_version = '5.0'
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
   s.requires_arc = true
 end
