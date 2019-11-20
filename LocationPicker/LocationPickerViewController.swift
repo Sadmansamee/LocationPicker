@@ -184,29 +184,6 @@ open class LocationPickerViewController: UIViewController {
             getCurrentLocation()
         }
         
-        let height = CGFloat(200)
-
-        locationBottomView = LocationBottomView(frame: CGRect(x: 0, y: view.frame.size.height - height, width: view.frame.width, height: height))
-        locationBottomView.btnLocate.addTarget(self, action: #selector(LocationPickerViewController.currentLocationPressed),
-        for: .touchUpInside)
-        
-        locationBottomView.btnSelect.addTarget(self, action: #selector(LocationPickerViewController.locationSelected),
-        for: .touchUpInside)
-        
-        self.mapView.addSubview(locationBottomView)
-        
-        if #available(iOS 11.0, *) {
-            NSLayoutConstraint.activate([
-                
-                locationBottomView.leadingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.leadingAnchor),
-                locationBottomView.trailingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.trailingAnchor),
-                locationBottomView.topAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.bottomAnchor,constant: -height),
-                locationBottomView.bottomAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.bottomAnchor),
-            ])
-        } else {
-            // Fallback on earlier versions
-        }
-        
     }
 
     open override var preferredStatusBarStyle : UIStatusBarStyle {
@@ -234,6 +211,31 @@ open class LocationPickerViewController: UIViewController {
             setInitialLocation()
             presentedInitialLocation = true
         }
+    }
+    
+    private func addBottomView(){
+        let height = CGFloat(200)
+
+             locationBottomView = LocationBottomView(frame: CGRect(x: 0, y: view.frame.size.height - height, width: view.frame.width, height: height))
+             locationBottomView.btnLocate.addTarget(self, action: #selector(LocationPickerViewController.currentLocationPressed),
+             for: .touchUpInside)
+             
+             locationBottomView.btnSelect.addTarget(self, action: #selector(LocationPickerViewController.locationSelected),
+             for: .touchUpInside)
+             
+             self.mapView.addSubview(locationBottomView)
+             
+             if #available(iOS 11.0, *) {
+                 NSLayoutConstraint.activate([
+                     
+                     locationBottomView.leadingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.leadingAnchor),
+                     locationBottomView.trailingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.trailingAnchor),
+                     locationBottomView.topAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.bottomAnchor,constant: -height),
+                     locationBottomView.bottomAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.bottomAnchor),
+                 ])
+             } else {
+                 // Fallback on earlier versions
+             }
     }
     
     func setInitialLocation() {
