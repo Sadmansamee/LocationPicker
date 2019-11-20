@@ -31,9 +31,8 @@ class LocationBottomView: UIView {
         let nib = UINib(nibName: "LocationBottomView", bundle: bundle)
         //Bundle.main.loadNibNamed("LocationBottomView", owner: self, options: nil)
         if let nibView = nib.instantiate(withOwner: self, options: nil).first as? UIView {
-        
-        //nibView.addSubview(contentView)
-        contentView.frame = self.bounds
+            //nibView.addSubview(contentView)
+            contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleHeight,.flexibleWidth]
         }
     }

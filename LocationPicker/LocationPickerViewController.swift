@@ -84,7 +84,7 @@ open class LocationPickerViewController: UIViewController {
     var currentLocationListeners: [CurrentLocationListener] = []
     
     var mapView: MKMapView!
-    //var locationButton: UIButton?
+    var locationButton: UIButton?
     var locationBottomView: LocationBottomView!
     
     lazy var results: LocationSearchResultsViewController = {
@@ -127,16 +127,16 @@ open class LocationPickerViewController: UIViewController {
         view = mapView
         
         if showCurrentLocationButton {
-//            let button = UIButton(frame: CGRect(x: 0, y: 100, width: 50, height: 50))
-//            button.backgroundColor = currentLocationButtonBackground
-//            button.layer.masksToBounds = true
-//            button.layer.cornerRadius = 16
-//            let bundle = Bundle(for: LocationPickerViewController.self)
-//            button.setImage(UIImage(named: "geolocation", in: bundle, compatibleWith: nil), for: UIControl.State())
-//            button.addTarget(self, action: #selector(LocationPickerViewController.currentLocationPressed),
-//                             for: .touchUpInside)
-//            view.addSubview(button)
-            //locationButton = button
+            let button = UIButton(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+            button.backgroundColor = currentLocationButtonBackground
+            button.layer.masksToBounds = true
+            button.layer.cornerRadius = 16
+            let bundle = Bundle(for: LocationPickerViewController.self)
+            button.setImage(UIImage(named: "geolocation", in: bundle, compatibleWith: nil), for: UIControl.State())
+            button.addTarget(self, action: #selector(LocationPickerViewController.currentLocationPressed),
+                             for: .touchUpInside)
+            //view.addSubview(button)
+            locationButton = button
         }
         
     }
@@ -161,10 +161,10 @@ open class LocationPickerViewController: UIViewController {
         locationSelectGesture.delegate = self
         mapView.addGestureRecognizer(locationSelectGesture)
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.didDragMap(_:)))
+        //let panGesture = UIPanGestureRecognizer(target: self, action: #selector(self.didDragMap(_:)))
         // make your class the delegate of the pan gesture
-        panGesture.delegate = self
-        mapView.addGestureRecognizer(panGesture)
+        //panGesture.delegate = self
+        //mapView.addGestureRecognizer(panGesture)
 
         // search
         if #available(iOS 11.0, *) {
@@ -222,12 +222,12 @@ open class LocationPickerViewController: UIViewController {
     }
     open override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-//        if let button = locationButton {
-//            button.frame.origin = CGPoint(
-//                x: view.frame.width - button.frame.width - 16,
-//                y: view.frame.height - button.frame.height - 20
-//            )
-//        }
+        if let button = locationButton {
+            button.frame.origin = CGPoint(
+                x: view.frame.width - button.frame.width - 16,
+                y: view.frame.height - button.frame.height - 20
+            )
+        }
         
         // setting initial location here since viewWillAppear is too early, and viewDidAppear is too late
         if !presentedInitialLocation {
@@ -261,10 +261,12 @@ open class LocationPickerViewController: UIViewController {
     }
     
     @objc func currentLocationPressed() {
+        
         showCurrentLocation()
     }
     
     func showCurrentLocation(_ animated: Bool = true) {
+        
         let listener = CurrentLocationListener(once: true) { [weak self] location in
             self?.showCoordinates(location.coordinate, animated: animated)
         }
@@ -296,7 +298,7 @@ open class LocationPickerViewController: UIViewController {
         annotation.coordinate = location.coordinate
         mapView.addAnnotation(annotation)
 
-       // DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { // Change `2.0` to the desired number of seconds.
+        DispatchQueue.main.asyncAfter(deadline: .now() ) { // Change `2.0` to the desired number of seconds.
            // Code you want to be delayed
             self.geocoder.cancelGeocode()
             self.geocoder.reverseGeocodeLocation(location) { response, error in
@@ -317,7 +319,7 @@ open class LocationPickerViewController: UIViewController {
                     self.location = Location(name: name, location: location, placemark: placemark)
                 }
             }
-       // }
+        }
     }
 }
 
@@ -427,20 +429,17 @@ extension LocationPickerViewController {
 extension LocationPickerViewController: MKMapViewDelegate {
     
     public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-
-        if (mapChangedFromUserInteraction) {
+       // if (mapChangedFromUserInteraction) {
             print("~~~~~~~~~~~~~~~regionDidChangeAnimated~~~~~~~~~~~~~~~~~~~~~")
             let location = mapView.centerCoordinate
-            
             // clean location, cleans out old annotation too
             self.location = nil
             selectLocation(location: CLLocation(latitude: location.latitude, longitude: location.longitude))
-        }
+      //  }
     }
     
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation is MKUserLocation { return nil }
-        
         let pin = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "annotation")
         pin.pinTintColor = .green
         // drop only on long press gesture
@@ -448,7 +447,6 @@ extension LocationPickerViewController: MKMapViewDelegate {
         //pin.animatesDrop = fromLongPress
         pin.rightCalloutAccessoryView = selectLocationButton()
         pin.canShowCallout = !fromLongPress
-        
         return pin
     }
     
