@@ -65,9 +65,9 @@ open class LocationPickerViewController: UIViewController {
     public var location: Location? {
         didSet {
             if isViewLoaded {
-                if let bottomView = locationBottomView{
-                    bottomView.labelTitle.text = location.flatMap({ $0.title }) ?? ""
-                }
+//                if let bottomView = locationBottomView{
+//                    bottomView.labelTitle.text = location.flatMap({ $0.title }) ?? ""
+//                }
                 searchBar.text = location.flatMap({ $0.title }) ?? ""
                 updateAnnotation()
             }
