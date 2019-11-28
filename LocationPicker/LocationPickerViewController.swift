@@ -32,6 +32,8 @@ open class LocationPickerViewController: UIViewController {
     
     /// default: "Search History"
     public var searchHistoryLabel = "Search History"
+
+    public var isViewOnly = false
     
     /// default: "Select"
     public var selectButtonTitle = "Select"
@@ -230,7 +232,6 @@ open class LocationPickerViewController: UIViewController {
             
             if #available(iOS 11.0, *) {
                 NSLayoutConstraint.activate([
-                    
                     locationBottomView.leadingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.leadingAnchor),
                     locationBottomView.trailingAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.trailingAnchor),
                     locationBottomView.topAnchor.constraint(equalTo: self.mapView.safeAreaLayoutGuide.bottomAnchor,constant: -height),
@@ -309,8 +310,6 @@ open class LocationPickerViewController: UIViewController {
             self.geocoder.cancelGeocode()
             self.geocoder.reverseGeocodeLocation(location) { response, error in
                 self.locationLookedUp = true
-                dump(response)
-                dump(error)
                 if let error = error as NSError?, error.code != 10 , error.code != 2{ // ignore cancelGeocode errors
                     // show error and remove annotation
                     //                          let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
@@ -395,7 +394,6 @@ extension LocationPickerViewController: UISearchResultsUpdating {
             // set location, this also adds annotation
             self.location = location
             self.showCoordinates(location.coordinate)
-            
             self.historyManager.addToHistory(location)
         }
     }
@@ -435,13 +433,11 @@ extension LocationPickerViewController {
 extension LocationPickerViewController: MKMapViewDelegate {
     
     public func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
-        // if (mapChangedFromUserInteraction) {
-        print("~~~~~~~~~~~~~~~regionDidChangeAnimated~~~~~~~~~~~~~~~~~~~~~")
-        let location = mapView.centerCoordinate
-        // clean location, cleans out old annotation too
-        self.location = nil
-        selectLocation(location: CLLocation(latitude: location.latitude, longitude: location.longitude))
-        //  }
+         if (!isViewOnly) {
+            let location = mapView.centerCoordinate
+            self.location = nil
+            selectLocation(location: CLLocation(latitude: location.latitude, longitude: location.longitude))
+        }
     }
     
     public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
