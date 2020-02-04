@@ -34,7 +34,9 @@ open class LocationPickerViewController: UIViewController {
     public var searchHistoryLabel = "Search History"
 
     public var isViewOnly = false
-    
+
+    public var tintColor: UIColor = .white
+
     /// default: "Select"
     public var selectButtonTitle = "Select"
     
@@ -42,7 +44,7 @@ open class LocationPickerViewController: UIViewController {
         if let navigationBar = self.navigationController?.navigationBar,
             let barTintColor = navigationBar.barTintColor {
             return barTintColor
-        } else { return .white }
+        } else { return tintColor }
     }()
     
     /// default: .minimal
@@ -113,7 +115,7 @@ open class LocationPickerViewController: UIViewController {
             searchBar.searchTextField.backgroundColor = searchTextFieldColor
         }
         let customBackButton = UIBarButtonItem(title: "Close", style: UIBarButtonItem.Style.done, target: self, action: #selector(backButtonPressed))
-        customBackButton.tintColor = .white
+        customBackButton.tintColor = tintColor
         navigationItem.leftBarButtonItem = customBackButton
         navigationItem.leftBarButtonItem?.setBackButtonTitlePositionAdjustment(.zero, for: .default)
         return searchBar
@@ -519,7 +521,7 @@ extension LocationPickerViewController: UISearchBarDelegate {
         //UIBarButtonItem(title: "Back", style: <#T##UIBarButtonItem.Style#>, target: self, action: #selector(backButtonPressed))
         //UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.cancel, target: self, action: #selector(backButtonPressed))
         //(image: image, style: .done, target: self, action: #selector(backButtonPressed))
-        customBackButton.tintColor = .white
+        customBackButton.tintColor = tintColor
         navigationItem.leftBarButtonItem = customBackButton
         navigationItem.leftBarButtonItem?.setBackButtonTitlePositionAdjustment(.zero, for: .default)
     }
